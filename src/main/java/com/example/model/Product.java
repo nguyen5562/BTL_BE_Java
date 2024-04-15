@@ -1,10 +1,6 @@
 package com.example.model;
 
-import java.util.Date;
-
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -17,25 +13,20 @@ public class Product {
     private String description;
     private int price;
     private int stock;
+
+    @DBRef
+    private String category;
+
+    @DBRef
+    private String brand;
+
     private String image;
-
-    @DBRef
-    private Category category;
-
-    @DBRef
-    private Brand brand;
-
-    @CreatedDate
-    public Date createdAt;
-
-    @LastModifiedDate
-    public Date updatedAt;
 
     // Constructor
     public Product() {
     }
 
-    public Product(String name, String description, int price, int stock, String image, Category category, Brand brand) {
+    public Product(String name, String description, int price, int stock, String category, String brand, String image) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -86,19 +77,19 @@ public class Product {
         this.image = image;
     }
 
-    public Category getCategory() {
+    public String getCategory() {
         return category;
     }
 
-    public void setCategory(Category category) {
+    public void setCategory(String category) {
         this.category = category;
     }
 
-    public Brand getBrand() {
+    public String getBrand() {
         return brand;
     }
 
-    public void setBrand(Brand brand) {
+    public void setBrand(String brand) {
         this.brand = brand;
     }
 }
