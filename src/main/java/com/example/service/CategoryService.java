@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.model.Category;
@@ -35,5 +38,15 @@ public class CategoryService {
 
     public void deleteCategory(String id) {
         categoryRepository.deleteById(id);
+    }
+
+    public Page<Category> findAllCategory(int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        return categoryRepository.findAll(pageable);
+    }
+
+    public Page<Category> findByName(int page, int pageSize, String filterName) {
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        return categoryRepository.findByName(filterName, pageable);
     }
 }

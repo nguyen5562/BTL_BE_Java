@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,25 @@ public class CategoryController {
             if (list.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else return new ResponseEntity<>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/get-all")
+    public ResponseEntity<List<Category>> getAllFilterCategory(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "5") int pageSize,
+            @RequestParam(required = false) String filterName) {
+        try {
+            Page<Category> list;
+            if (filterName == null) {
+                list = categoryService.findAllCategory(page, pageSize);
+            } else list = categoryService.findByName(page, pageSize, filterName);
+            if (list.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            } else
+                return new ResponseEntity<>(list.getContent(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }

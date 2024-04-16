@@ -10,6 +10,6 @@ import com.example.model.Brand;
 
 @Repository
 public interface BrandRepository extends MongoRepository<Brand, String> {
-    @Query("{$and: [ { 'name': { $regex: ?0, $options: 'i' } } ]}")
+    @Query("{ 'name': { $regex: ?0, $options: 'i' } }")
     Page<Brand> findByName(String name, Pageable pageable);
 }

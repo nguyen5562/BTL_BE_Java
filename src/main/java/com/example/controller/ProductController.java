@@ -32,13 +32,13 @@ public class ProductController {
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<List<Product>> getAllProduct(
-        @RequestParam(defaultValue = "1") int page,
-        @RequestParam(defaultValue = "5") int pageSize,
-        @RequestParam(required = false) String filterName,
-        @RequestParam(required = false) String filterBrand,
-        @RequestParam(required = false, defaultValue = "0") float filterPriceMin,
-        @RequestParam(required = false, defaultValue = Float.MAX_VALUE + "") float filterPriceMax) {
+    public ResponseEntity<List<Product>> getAllFilterProduct(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "5") int pageSize,
+            @RequestParam(required = false) String filterName,
+            @RequestParam(required = false) String filterBrand,
+            @RequestParam(required = false, defaultValue = "0") float filterPriceMin,
+            @RequestParam(required = false, defaultValue = Float.MAX_VALUE + "") float filterPriceMax) {
         try {
             Page<Product> list;
             if (filterName == null && filterBrand == null) {
@@ -47,8 +47,10 @@ public class ProductController {
                 list = productService.findName(page, pageSize, filterName, filterPriceMin, filterPriceMax);
             } else if (filterName == null && filterBrand != null) {
                 list = productService.findBrand(page, pageSize, filterBrand, filterPriceMin, filterPriceMax);
-            } else list = productService.findNameBrand(page, pageSize, filterName, filterBrand, filterPriceMin, filterPriceMax);
-            
+            } else
+                list = productService.findNameBrand(page, pageSize, filterName, filterBrand, filterPriceMin,
+                        filterPriceMax);
+
             if (list.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else {

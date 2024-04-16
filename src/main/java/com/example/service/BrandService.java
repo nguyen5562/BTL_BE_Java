@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.model.Brand;
@@ -35,5 +38,15 @@ public class BrandService {
 
     public void deleteBrand(String id) {
         brandRepository.deleteById(id);
+    }
+
+    public Page<Brand> findAllBrand(int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        return brandRepository.findAll(pageable);
+    }
+
+    public Page<Brand> findByName(int page, int pageSize, String filterName) {
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        return brandRepository.findByName(filterName, pageable);
     }
 }
