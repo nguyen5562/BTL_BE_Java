@@ -9,18 +9,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.model.Category;
-import com.example.repository.CategoryRepository;
+import com.example.service.CategoryService;
 
 @RestController
 @RequestMapping("/api/category")
 public class CategoryController {
     @Autowired
-    private CategoryRepository categoryRepository;
+    private CategoryService categoryService;
 
-    @GetMapping("/get-all")
+    @GetMapping("/get-all-category")
     public ResponseEntity<List<Category>> getAllCategory() {
         try {
-            List<Category> list = categoryRepository.findAll();
+            List<Category> list = categoryService.getAllCategory();
             if (list.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else return new ResponseEntity<>(list, HttpStatus.OK);
@@ -32,7 +32,7 @@ public class CategoryController {
     @GetMapping("/get-category/{id}")
     public ResponseEntity<Category> getCategory(@PathVariable("id") String id) {
         try {
-            Optional<Category> category = categoryRepository.findById(id);
+            Optional<Category> category = categoryService.getCategory(id);
             if (category.isPresent()) {
                 return new ResponseEntity<>(category.get(), HttpStatus.OK);
             } else {
@@ -46,7 +46,7 @@ public class CategoryController {
     @PostMapping("/create-category")
     public ResponseEntity<Category> createCategory(@RequestBody Category category) {
         try {
-            Category created = categoryRepository.save(new Category(category.getName()));
+            Category created = categoryService.createCategory(category);
             return new ResponseEntity<>(created, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -56,12 +56,8 @@ public class CategoryController {
     @PutMapping("/update-category/{id}")
     public ResponseEntity<Category> updateCategory(@PathVariable("id") String id, @RequestBody Category category) {
         try {
-            Optional<Category> updated = categoryRepository.findById(id);
-            if (updated.isPresent()) {
-                Category _category = updated.get();
-                _category.setName(category.getName());
-                return new ResponseEntity<>(categoryRepository.save(_category), HttpStatus.OK);
-            } else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            Category updated = categoryService.updateCategory(id, category);
+            return new ResponseEntity<>(updated, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -70,7 +66,7 @@ public class CategoryController {
     @DeleteMapping("/delete-category/{id}")
     public ResponseEntity<HttpStatus> deleteCategory(@PathVariable("id") String id) {
         try {
-            categoryRepository.deleteById(id);
+            categoryService.deleteCategory(id);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

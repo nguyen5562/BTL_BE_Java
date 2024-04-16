@@ -1,7 +1,6 @@
 package com.example.model;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "products")
@@ -11,22 +10,17 @@ public class Product {
 
     private String name;
     private String description;
-    private int price;
+    private float price;
     private int stock;
-
-    @DBRef
     private String category;
-
-    @DBRef
     private String brand;
-
     private String image;
 
     // Constructor
     public Product() {
     }
 
-    public Product(String name, String description, int price, int stock, String category, String brand, String image) {
+    public Product(String name, String description, float price, int stock, String category, String brand, String image) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -37,6 +31,10 @@ public class Product {
     }
 
     // Getter and Setter
+    public String getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }
@@ -53,11 +51,11 @@ public class Product {
         this.description = description;
     }
 
-    public int getPrice() {
+    public float getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(float price) {
         this.price = price;
     }
 

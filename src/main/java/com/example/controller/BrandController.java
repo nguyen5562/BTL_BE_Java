@@ -9,18 +9,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.model.Brand;
-import com.example.repository.BrandRepository;
+import com.example.service.BrandService;
 
 @RestController
 @RequestMapping("/api/brand")
 public class BrandController {
     @Autowired
-    private BrandRepository brandRepository;
+    private BrandService brandService;
 
-    @GetMapping("/get-all")
+    @GetMapping("/get-all-brand")
     public ResponseEntity<List<Brand>> getAllBrand() {
         try {
-            List<Brand> list = brandRepository.findAll();
+            List<Brand> list = brandService.getAllBrand();
             if (list.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else return new ResponseEntity<>(list, HttpStatus.OK);
@@ -32,7 +32,7 @@ public class BrandController {
     @GetMapping("/get-brand/{id}")
     public ResponseEntity<Brand> getBrand(@PathVariable("id") String id) {
         try {
-            Optional<Brand> brand = brandRepository.findById(id);
+            Optional<Brand> brand = brandService.getBrand(id);
             if (brand.isPresent()) {
                 return new ResponseEntity<>(brand.get(), HttpStatus.OK);
             } else {
@@ -46,7 +46,7 @@ public class BrandController {
     @PostMapping("/create-brand")
     public ResponseEntity<Brand> createBrand(@RequestBody Brand brand) {
         try {
-            Brand created = brandRepository.save(new Brand(brand.getName()));
+            Brand created = brandService.createBrand(brand);
             return new ResponseEntity<>(created, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -56,12 +56,8 @@ public class BrandController {
     @PutMapping("/update-brand/{id}")
     public ResponseEntity<Brand> updateBrand(@PathVariable("id") String id, @RequestBody Brand brand) {
         try {
-            Optional<Brand> updated = brandRepository.findById(id);
-            if (updated.isPresent()) {
-                Brand _brand = updated.get();
-                _brand.setName(brand.getName());
-                return new ResponseEntity<>(brandRepository.save(_brand), HttpStatus.OK);
-            } else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            Brand updated = brandService.updateBrand(id, brand);
+            return new ResponseEntity<>(updated, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -70,7 +66,7 @@ public class BrandController {
     @DeleteMapping("/delete-brand/{id}")
     public ResponseEntity<HttpStatus> deleteBrand(@PathVariable("id") String id) {
         try {
-            brandRepository.deleteById(id);
+            brandService.deleteBrand(id);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
