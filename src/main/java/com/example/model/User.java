@@ -18,7 +18,7 @@ public class User {
 
     // Constructor
     public User() {
-
+        
     }
 
     public User(String name, String email, String password, boolean isAdmin) {
@@ -29,6 +29,10 @@ public class User {
     }
 
     // Getter and Setter
+    public String getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }

@@ -40,7 +40,8 @@ public class BrandController {
             Page<Brand> list;
             if (filterName == null) {
                 list = brandService.findAllBrand(page, pageSize);
-            } else list = brandService.findByName(page, pageSize, filterName);
+            } else
+                list = brandService.findByName(page, pageSize, filterName);
             if (list.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else

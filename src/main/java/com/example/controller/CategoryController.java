@@ -24,7 +24,8 @@ public class CategoryController {
             List<Category> list = categoryService.getAllCategory();
             if (list.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            } else return new ResponseEntity<>(list, HttpStatus.OK);
+            } else
+                return new ResponseEntity<>(list, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -39,7 +40,8 @@ public class CategoryController {
             Page<Category> list;
             if (filterName == null) {
                 list = categoryService.findAllCategory(page, pageSize);
-            } else list = categoryService.findByName(page, pageSize, filterName);
+            } else
+                list = categoryService.findByName(page, pageSize, filterName);
             if (list.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else
