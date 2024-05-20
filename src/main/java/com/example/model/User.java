@@ -4,9 +4,12 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Document(collection = "users")
 public class User {
     @Id
+    @JsonProperty("_id")
     private String id;
 
     private String name;
@@ -14,6 +17,8 @@ public class User {
     @Indexed(unique = true)
     private String email;
     private String password;
+
+    @JsonProperty("isAdmin")
     private boolean isAdmin;
 
     // Constructor

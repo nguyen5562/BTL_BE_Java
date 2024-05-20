@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import com.example.DemoApplication;
 import com.example.DTO.LoginRequest;
 import com.example.DTO.Role;
+import com.example.DTO.SignUpRequest;
 import com.example.model.User;
 import com.example.service.UserService;
 
@@ -74,16 +75,23 @@ public class UserController {
     }
 
     @PostMapping("/sign-up")
-    public ResponseEntity<?> createUser(@RequestBody User user) {
+    public ResponseEntity<?> createUser(@RequestBody SignUpRequest signUpRequest) {
         try {
-            if (pattern.matcher(user.getEmail()).matches()) {
+            if (!signUpRequest.getPassword().equals(signUpRequest.getConfirmPassword())) {
+                System.out.println(signUpRequest.getPassword());
+                System.out.println(signUpRequest.getConfirmPassword());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of(
+                        "status", "ERR",
+                        "message", "Mật khẩu đã nhập không khớp"));
+            } else if (pattern.matcher(signUpRequest.getEmail()).matches()) {
+                User user = new User(signUpRequest.getName(), signUpRequest.getEmail(), signUpRequest.getPassword(), false);
                 User created = userService.createUser(user);
                 return ResponseEntity.ok(Map.of(
                         "status", "OK",
                         "message", "SUCCESS",
                         "data", created));
             } else
-                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(Map.of(
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of(
                         "status", "ERR",
                         "message", "Email đã tồn tại"));
         } catch (Exception e) {

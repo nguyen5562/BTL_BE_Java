@@ -3,9 +3,12 @@ package com.example.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Document(collection = "products")
 public class Product {
     @Id
+    @JsonProperty("_id")
     private String id;
 
     private String name;
