@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,22 +20,25 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping("/get-all-category")
-    public ResponseEntity<List<Category>> getAllCategory() {
+    public ResponseEntity<?> getAllCategory() {
         try {
             List<Category> list = categoryService.getAllCategory();
             if (list.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             } else
-                return new ResponseEntity<>(list, HttpStatus.OK);
+                return ResponseEntity.ok(Map.of(
+                        "status", "OK",
+                        "message", "SUCCESS",
+                        "data", list));
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<List<Category>> getAllFilterCategory(
+    public ResponseEntity<?> getAllFilterCategory(
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "5") int pageSize,
+            @RequestParam(defaultValue = "100") int pageSize,
             @RequestParam(required = false) String filterName) {
         try {
             Page<Category> list;
@@ -43,20 +47,26 @@ public class CategoryController {
             } else
                 list = categoryService.findByName(page, pageSize, filterName);
             if (list.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             } else
-                return new ResponseEntity<>(list.getContent(), HttpStatus.OK);
+                return ResponseEntity.ok(Map.of(
+                        "status", "OK",
+                        "message", "SUCCESS",
+                        "data", list.getContent()));
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/get-category/{id}")
-    public ResponseEntity<Category> getCategory(@PathVariable("id") String id) {
+    public ResponseEntity<?> getCategory(@PathVariable("id") String id) {
         try {
             Optional<Category> category = categoryService.getCategory(id);
             if (category.isPresent()) {
-                return new ResponseEntity<>(category.get(), HttpStatus.OK);
+                return ResponseEntity.ok(Map.of(
+                        "status", "OK",
+                        "message", "SUCCESS",
+                        "data", category.get()));
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
@@ -66,30 +76,38 @@ public class CategoryController {
     }
 
     @PostMapping("/create-category")
-    public ResponseEntity<Category> createCategory(@RequestBody Category category) {
+    public ResponseEntity<?> createCategory(@RequestBody Category category) {
         try {
             Category created = categoryService.createCategory(category);
-            return new ResponseEntity<>(created, HttpStatus.CREATED);
+            return ResponseEntity.ok(Map.of(
+                    "status", "OK",
+                    "message", "SUCCESS",
+                    "data", created));
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PutMapping("/update-category/{id}")
-    public ResponseEntity<Category> updateCategory(@PathVariable("id") String id, @RequestBody Category category) {
+    public ResponseEntity<?> updateCategory(@PathVariable("id") String id, @RequestBody Category category) {
         try {
             Category updated = categoryService.updateCategory(id, category);
-            return new ResponseEntity<>(updated, HttpStatus.OK);
+            return ResponseEntity.ok(Map.of(
+                    "status", "OK",
+                    "message", "SUCCESS",
+                    "data", updated));
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @DeleteMapping("/delete-category/{id}")
-    public ResponseEntity<HttpStatus> deleteCategory(@PathVariable("id") String id) {
+    public ResponseEntity<?> deleteCategory(@PathVariable("id") String id) {
         try {
             categoryService.deleteCategory(id);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return ResponseEntity.ok(Map.of(
+                    "status", "OK",
+                    "message", "SUCCESS"));
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,22 +20,25 @@ public class BrandController {
     private BrandService brandService;
 
     @GetMapping("/get-all-brand")
-    public ResponseEntity<List<Brand>> getAllBrand() {
+    public ResponseEntity<?> getAllBrand() {
         try {
             List<Brand> list = brandService.getAllBrand();
             if (list.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             } else
-                return new ResponseEntity<>(list, HttpStatus.OK);
+                return ResponseEntity.ok(Map.of(
+                        "status", "OK",
+                        "message", "SUCCESS",
+                        "data", list));
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<List<Brand>> getAllFilterBrand(
+    public ResponseEntity<?> getAllFilterBrand(
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "5") int pageSize,
+            @RequestParam(defaultValue = "100") int pageSize,
             @RequestParam(required = false) String filterName) {
         try {
             Page<Brand> list;
@@ -43,53 +47,67 @@ public class BrandController {
             } else
                 list = brandService.findByName(page, pageSize, filterName);
             if (list.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             } else
-                return new ResponseEntity<>(list.getContent(), HttpStatus.OK);
+                return ResponseEntity.ok(Map.of(
+                        "status", "OK",
+                        "message", "SUCCESS",
+                        "data", list.getContent()));
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/get-brand/{id}")
-    public ResponseEntity<Brand> getBrand(@PathVariable("id") String id) {
+    public ResponseEntity<?> getBrand(@PathVariable("id") String id) {
         try {
             Optional<Brand> brand = brandService.getBrand(id);
             if (brand.isPresent()) {
-                return new ResponseEntity<>(brand.get(), HttpStatus.OK);
+                return ResponseEntity.ok(Map.of(
+                        "status", "OK",
+                        "message", "SUCCESS",
+                        "data", brand.get()));
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PostMapping("/create-brand")
-    public ResponseEntity<Brand> createBrand(@RequestBody Brand brand) {
+    public ResponseEntity<?> createBrand(@RequestBody Brand brand) {
         try {
             Brand created = brandService.createBrand(brand);
-            return new ResponseEntity<>(created, HttpStatus.CREATED);
+            return ResponseEntity.ok(Map.of(
+                    "status", "OK",
+                    "message", "SUCCESS",
+                    "data", created));
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PutMapping("/update-brand/{id}")
-    public ResponseEntity<Brand> updateBrand(@PathVariable("id") String id, @RequestBody Brand brand) {
+    public ResponseEntity<?> updateBrand(@PathVariable("id") String id, @RequestBody Brand brand) {
         try {
             Brand updated = brandService.updateBrand(id, brand);
-            return new ResponseEntity<>(updated, HttpStatus.OK);
+            return ResponseEntity.ok(Map.of(
+                    "status", "OK",
+                    "message", "SUCCESS",
+                    "data", updated));
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @DeleteMapping("/delete-brand/{id}")
-    public ResponseEntity<HttpStatus> deleteBrand(@PathVariable("id") String id) {
+    public ResponseEntity<?> deleteBrand(@PathVariable("id") String id) {
         try {
             brandService.deleteBrand(id);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return ResponseEntity.ok(Map.of(
+                "status", "OK",
+                "message", "SUCCESS"));
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

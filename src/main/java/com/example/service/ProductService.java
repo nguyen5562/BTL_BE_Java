@@ -54,10 +54,10 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    public Page<Product> findNameBrand(int page, int pageSize, String filterName, String filterBrand, float filterMinPrice, float filterMaxPrice) {
+    public Page<Product> findNameCategory(int page, int pageSize, String filterName, String filterCategory, float filterMinPrice, float filterMaxPrice) {
         Pageable pageable = PageRequest.of(page - 1, pageSize);
-        ObjectId brand = new ObjectId(filterBrand);
-        return productRepository.findByNameandBrand(filterName, brand, filterMinPrice, filterMaxPrice, pageable);
+        ObjectId category = new ObjectId(filterCategory);
+        return productRepository.findByNameandCategory(filterName, category, filterMinPrice, filterMaxPrice, pageable);
     }
 
     public Page<Product> findName(int page, int pageSize, String filterName, float filterMinPrice, float filterMaxPrice) {
@@ -65,10 +65,10 @@ public class ProductService {
         return productRepository.findByName(filterName, filterMinPrice, filterMaxPrice, pageable);
     }
 
-    public Page<Product> findBrand(int page, int pageSize, String filterBrand, float filterMinPrice, float filterMaxPrice) {
+    public Page<Product> findCategory(int page, int pageSize, String filterCategory, float filterMinPrice, float filterMaxPrice) {
         Pageable pageable = PageRequest.of(page - 1, pageSize);
-        ObjectId brand = new ObjectId(filterBrand);
-        return productRepository.findByBrand(brand, filterMinPrice, filterMaxPrice, pageable);
+        ObjectId category = new ObjectId(filterCategory);
+        return productRepository.findByCategory(category, filterMinPrice, filterMaxPrice, pageable);
     }
 
     public Page<Product> findAllProduct(int page, int pageSize, float filterMinPrice, float filterMaxPrice) {
