@@ -57,10 +57,8 @@ public class UserService {
         } else if (BCrypt.checkpw(loginRequest.getPassword(), db.getPassword())) {
             String access_token = jwtService.generalAccessToken(db.getId(), db.isAdmin());
             token.add(access_token);
-            System.out.println(access_token);
             String refresh_token = jwtService.generalRefreshToken(db.getId(), db.isAdmin());
             token.add(refresh_token);
-            System.out.println(refresh_token);
             return token;
         } else
             return null;

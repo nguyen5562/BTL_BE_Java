@@ -79,7 +79,6 @@ public class OrderService {
 
     public List<OrderDTO> getAllOrdersByUser(String user) {
         List<Order> orders = orderRepository.findByUser(user);
-        System.out.println(orders);
 
         return orders.stream().map(order -> {
             List<OrderItem> orderItems = orderItemRepository.findByOrder(order.getId());
