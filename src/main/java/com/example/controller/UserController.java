@@ -20,6 +20,7 @@ import com.example.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 
+@SuppressWarnings("unused")
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
@@ -29,27 +30,41 @@ public class UserController {
     private static final String EMAIL_REGEX = "^\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
     private static final Pattern pattern = Pattern.compile(EMAIL_REGEX);
 
-    @GetMapping("/get-all-user")
-    public ResponseEntity<?> getAllUser(@RequestHeader("token") String token) {
+    // @GetMapping("/get-all")
+    // public ResponseEntity<?> getAllUser(@RequestHeader("token") String token) {
+    // try {
+    // String access_token = token.split(" ")[1];
+    // Claims claims =
+    // Jwts.parser().verifyWith(DemoApplication.key).build().parseSignedClaims(access_token)
+    // .getPayload();
+    // Boolean isAdmin = claims.get("isAdmin", Boolean.class);
+    // if (isAdmin) {
+    // List<User> list = userService.getAllUser();
+    // if (list.isEmpty()) {
+    // return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    // } else
+    // return ResponseEntity.ok(Map.of(
+    // "status", "OK",
+    // "message", "SUCCESS",
+    // "data", list));
+    // } else {
+    // return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
+    // "status", "ERR",
+    // "message", "Bạn cần có quyền admin để thực hiện việc này"));
+    // }
+    // } catch (Exception e) {
+    // return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    // }
+    // }
+
+    @GetMapping("/get-all")
+    public ResponseEntity<?> getAllUser() {
         try {
-            String access_token = token.split(" ")[1];
-            Claims claims = Jwts.parser().verifyWith(DemoApplication.key).build().parseSignedClaims(access_token)
-                    .getPayload();
-            Boolean isAdmin = claims.get("isAdmin", Boolean.class);
-            if (isAdmin) {
-                List<User> list = userService.getAllUser();
-                if (list.isEmpty()) {
-                    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-                } else
-                    return ResponseEntity.ok(Map.of(
-                            "status", "OK",
-                            "message", "SUCCESS",
-                            "data", list));
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
-                        "status", "ERR",
-                        "message", "Bạn cần có quyền admin để thực hiện việc này"));
-            }
+            List<User> list = userService.getAllUser();
+            return ResponseEntity.ok(Map.of(
+                    "status", "OK",
+                    "message", "SUCCESS",
+                    "data", list));
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -82,7 +97,8 @@ public class UserController {
                         "status", "ERR",
                         "message", "Mật khẩu đã nhập không khớp"));
             } else if (pattern.matcher(signUpRequest.getEmail()).matches()) {
-                User user = new User(signUpRequest.getName(), signUpRequest.getEmail(), signUpRequest.getPassword(), false);
+                User user = new User(signUpRequest.getName(), signUpRequest.getEmail(), signUpRequest.getPassword(),
+                        false);
                 User created = userService.createUser(user);
                 return ResponseEntity.ok(Map.of(
                         "status", "OK",
@@ -97,7 +113,7 @@ public class UserController {
         }
     }
 
-    @PutMapping("update-user/{id}")
+    @PutMapping("/update-user/{id}")
     public ResponseEntity<?> updateUser(@PathVariable("id") String id, @RequestBody Role role) {
         try {
             User updated = userService.updateUser(id, role.getIsAdmin());
@@ -110,7 +126,7 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("delete-user/{id}")
+    @DeleteMapping("/delete-user/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable("id") String id) {
         try {
             userService.deleteUser(id);
@@ -122,7 +138,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("sign-in")
+    @PostMapping("/sign-in")
     public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest) {
         try {
             List<String> token = userService.signIn(loginRequest);
@@ -141,7 +157,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("refresh-token")
+    @PostMapping("/refresh-token")
     public ResponseEntity<?> refreshToken(@RequestHeader String ac) {
         try {
             return new ResponseEntity<>(HttpStatus.OK);

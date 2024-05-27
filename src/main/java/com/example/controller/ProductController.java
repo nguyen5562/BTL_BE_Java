@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,10 +22,7 @@ public class ProductController {
     public ResponseEntity<?> getAllProduct() {
         try {
             List<Product> list = productService.getAllProduct();
-            if (list.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            } else
-                return ResponseEntity.ok(Map.of(
+            return ResponseEntity.ok(Map.of(
                     "status", "OK",
                     "message", "SUCCESS",
                     "data", list));
@@ -37,32 +33,23 @@ public class ProductController {
 
     @GetMapping("/get-all")
     public ResponseEntity<?> getAllFilterProduct(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "100") int pageSize,
             @RequestParam(required = false) String filterName,
-            @RequestParam(required = false) String filterCategory,
-            @RequestParam(required = false, defaultValue = "0") float filterPriceMin,
-            @RequestParam(required = false, defaultValue = Float.MAX_VALUE + "") float filterPriceMax) {
+            @RequestParam(required = false) String filterCategory) {
         try {
-            Page<Product> list;
+            List<Product> list;
             if (filterName == null && filterCategory == null) {
-                list = productService.findAllProduct(page, pageSize, filterPriceMin, filterPriceMax);
+                list = productService.getAllProduct();
             } else if (filterName != null && filterCategory == null) {
-                list = productService.findName(page, pageSize, filterName, filterPriceMin, filterPriceMax);
+                list = productService.findName(filterName);
             } else if (filterName == null && filterCategory != null) {
-                list = productService.findCategory(page, pageSize, filterCategory, filterPriceMin, filterPriceMax);
+                list = productService.findCategory(filterCategory);
             } else
-                list = productService.findNameCategory(page, pageSize, filterName, filterCategory, filterPriceMin,
-                        filterPriceMax);
+                list = productService.findNameCategory(filterName, filterCategory);
 
-            if (list.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            } else {
-                return ResponseEntity.ok(Map.of(
+            return ResponseEntity.ok(Map.of(
                     "status", "OK",
                     "message", "SUCCESS",
-                    "data", list.getContent()));
-            }
+                    "data", list));
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -74,9 +61,9 @@ public class ProductController {
             Optional<Product> product = productService.getProduct(id);
             if (product.isPresent()) {
                 return ResponseEntity.ok(Map.of(
-                    "status", "OK",
-                    "message", "SUCCESS",
-                    "data", product.get()));
+                        "status", "OK",
+                        "message", "SUCCESS",
+                        "data", product.get()));
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
@@ -90,9 +77,9 @@ public class ProductController {
         try {
             Product created = productService.createProduct(product);
             return ResponseEntity.ok(Map.of(
-                "status", "OK",
-                "message", "SUCCESS",
-                "data", created));
+                    "status", "OK",
+                    "message", "SUCCESS",
+                    "data", created));
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -103,9 +90,9 @@ public class ProductController {
         try {
             Product updated = productService.updateProduct(id, product);
             return ResponseEntity.ok(Map.of(
-                "status", "OK",
-                "message", "SUCCESS",
-                "data", updated));
+                    "status", "OK",
+                    "message", "SUCCESS",
+                    "data", updated));
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -116,8 +103,8 @@ public class ProductController {
         try {
             productService.deleteProduct(id);
             return ResponseEntity.ok(Map.of(
-                "status", "OK",
-                "message", "SUCCESS"));
+                    "status", "OK",
+                    "message", "SUCCESS"));
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

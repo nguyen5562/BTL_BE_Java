@@ -23,13 +23,10 @@ public class BrandController {
     public ResponseEntity<?> getAllBrand() {
         try {
             List<Brand> list = brandService.getAllBrand();
-            if (list.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            } else
-                return ResponseEntity.ok(Map.of(
-                        "status", "OK",
-                        "message", "SUCCESS",
-                        "data", list));
+            return ResponseEntity.ok(Map.of(
+                    "status", "OK",
+                    "message", "SUCCESS",
+                    "data", list));
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -106,8 +103,8 @@ public class BrandController {
         try {
             brandService.deleteBrand(id);
             return ResponseEntity.ok(Map.of(
-                "status", "OK",
-                "message", "SUCCESS"));
+                    "status", "OK",
+                    "message", "SUCCESS"));
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

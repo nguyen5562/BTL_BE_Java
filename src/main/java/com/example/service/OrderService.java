@@ -121,7 +121,10 @@ public class OrderService {
 
     public void deleteOrder(String id) {
         ObjectId orderId = new ObjectId(id);
-        orderItemRepository.deleteByOrder(orderId);
+
+        List<OrderItem> list = orderItemRepository.findByOrder(orderId);
+        orderItemRepository.deleteAll(list);
+
         orderRepository.deleteById(id);
     }
 }

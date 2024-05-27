@@ -5,9 +5,6 @@ import java.util.Optional;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.model.Product;
@@ -54,25 +51,17 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    public Page<Product> findNameCategory(int page, int pageSize, String filterName, String filterCategory, float filterMinPrice, float filterMaxPrice) {
-        Pageable pageable = PageRequest.of(page - 1, pageSize);
+    public List<Product> findNameCategory(String filterName, String filterCategory) {
         ObjectId category = new ObjectId(filterCategory);
-        return productRepository.findByNameandCategory(filterName, category, filterMinPrice, filterMaxPrice, pageable);
+        return productRepository.findByNameandCategory(filterName, category);
     }
 
-    public Page<Product> findName(int page, int pageSize, String filterName, float filterMinPrice, float filterMaxPrice) {
-        Pageable pageable = PageRequest.of(page - 1, pageSize);
-        return productRepository.findByName(filterName, filterMinPrice, filterMaxPrice, pageable);
+    public List<Product> findName(String filterName) {
+        return productRepository.findByName(filterName);
     }
 
-    public Page<Product> findCategory(int page, int pageSize, String filterCategory, float filterMinPrice, float filterMaxPrice) {
-        Pageable pageable = PageRequest.of(page - 1, pageSize);
+    public List<Product> findCategory(String filterCategory) {
         ObjectId category = new ObjectId(filterCategory);
-        return productRepository.findByCategory(category, filterMinPrice, filterMaxPrice, pageable);
-    }
-
-    public Page<Product> findAllProduct(int page, int pageSize, float filterMinPrice, float filterMaxPrice) {
-        Pageable pageable = PageRequest.of(page - 1, pageSize);
-        return productRepository.findAllProduct(filterMinPrice, filterMaxPrice, pageable);
+        return productRepository.findByCategory(category);
     }
 }

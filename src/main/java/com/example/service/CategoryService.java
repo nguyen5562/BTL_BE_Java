@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.model.Category;
+import com.example.model.Product;
 import com.example.repository.CategoryRepository;
 import com.example.repository.ProductRepository;
 
@@ -43,7 +44,10 @@ public class CategoryService {
 
     public void deleteCategory(String id) {
         ObjectId categoryId = new ObjectId(id);
-        productRepository.deleteByCategory(categoryId);
+
+        List<Product> list = productRepository.findByCategory(categoryId);
+        productRepository.deleteAll(list);
+
         categoryRepository.deleteById(id);
     }
 

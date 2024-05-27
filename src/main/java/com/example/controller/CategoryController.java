@@ -23,13 +23,10 @@ public class CategoryController {
     public ResponseEntity<?> getAllCategory() {
         try {
             List<Category> list = categoryService.getAllCategory();
-            if (list.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            } else
-                return ResponseEntity.ok(Map.of(
-                        "status", "OK",
-                        "message", "SUCCESS",
-                        "data", list));
+            return ResponseEntity.ok(Map.of(
+                    "status", "OK",
+                    "message", "SUCCESS",
+                    "data", list));
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

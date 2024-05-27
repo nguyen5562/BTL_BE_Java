@@ -14,6 +14,6 @@ public interface OrderItemRepository extends MongoRepository<OrderItem, String> 
     @Query("{ 'order': { $eq: ?0 } }")
     List<OrderItem> findByOrder(ObjectId order);
 
-    @Query("{ 'order': ?0 }")
-    void deleteByOrder(ObjectId order);
+    // @Query("{'order': ?0}")
+    // void deleteByOrder(ObjectId order);
 }
