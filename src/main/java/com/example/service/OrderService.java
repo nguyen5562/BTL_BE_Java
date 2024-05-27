@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.DTO.OrderDTO;
@@ -63,9 +62,7 @@ public class OrderService {
         }
 
         Order order = orderOptional.get();
-        ObjectId orderId = new ObjectId(order.getId());
-        List<OrderItem> orderItems = orderItemRepository.findByOrder(orderId);
-        System.out.println(orderItems);
+        List<OrderItem> orderItems = orderItemRepository.findByOrder(order.getId());
 
         OrderDTO orderDTO = new OrderDTO(order, orderItems);
         return orderDTO;
@@ -74,20 +71,18 @@ public class OrderService {
     public List<OrderDTO> getAllOrders() {
         List<Order> orders = orderRepository.findAll();
         return orders.stream().map(order -> {
-            ObjectId orderId = new ObjectId(order.getId());
-            List<OrderItem> orderItems = orderItemRepository.findByOrder(orderId);
+            List<OrderItem> orderItems = orderItemRepository.findByOrder(order.getId());
             User user = userRepository.findById(order.getUser()).orElse(null);
             return new OrderDTO(order, orderItems, user != null ? user.getName() : null);
         }).collect(Collectors.toList());
     }
 
     public List<OrderDTO> getAllOrdersByUser(String user) {
-        ObjectId userId = new ObjectId(user);
-        List<Order> orders = orderRepository.findByUser(userId);
+        List<Order> orders = orderRepository.findByUser(user);
+        System.out.println(orders);
 
         return orders.stream().map(order -> {
-            ObjectId orderId = new ObjectId(order.getId());
-            List<OrderItem> orderItems = orderItemRepository.findByOrder(orderId);
+            List<OrderItem> orderItems = orderItemRepository.findByOrder(order.getId());
             return new OrderDTO(order, orderItems);
         }).collect(Collectors.toList());
     }
@@ -120,9 +115,7 @@ public class OrderService {
     }
 
     public void deleteOrder(String id) {
-        ObjectId orderId = new ObjectId(id);
-
-        List<OrderItem> list = orderItemRepository.findByOrder(orderId);
+        List<OrderItem> list = orderItemRepository.findByOrder(id);
         orderItemRepository.deleteAll(list);
 
         orderRepository.deleteById(id);

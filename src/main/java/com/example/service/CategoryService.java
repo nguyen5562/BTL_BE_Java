@@ -3,7 +3,6 @@ package com.example.service;
 import java.util.List;
 import java.util.Optional;
 
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -43,9 +42,7 @@ public class CategoryService {
     }
 
     public void deleteCategory(String id) {
-        ObjectId categoryId = new ObjectId(id);
-
-        List<Product> list = productRepository.findByCategory(categoryId);
+        List<Product> list = productRepository.findByCategory(id);
         productRepository.deleteAll(list);
 
         categoryRepository.deleteById(id);

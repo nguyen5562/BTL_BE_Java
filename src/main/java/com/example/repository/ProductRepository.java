@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.example.model.Product;
+import com.example.model.Product;   
 
 @Repository
 public interface ProductRepository extends MongoRepository<Product, String> {
@@ -18,10 +18,10 @@ public interface ProductRepository extends MongoRepository<Product, String> {
     List<Product> findByName(String name);
 
     @Query("{ 'category': { $eq: ?0 } }")
-    List<Product> findByCategory(ObjectId category);
+    List<Product> findByCategory(String category);
 
     @Query("{ 'brand': { $eq: ?0 } }")
-    List<Product> findByBrand(ObjectId brand);
+    List<Product> findByBrand(String brand);
 
     // @Query("{ 'category': ?0 }")
     // void deleteByCategory(ObjectId category);

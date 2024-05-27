@@ -61,7 +61,10 @@ public class ProductService {
     }
 
     public List<Product> findCategory(String filterCategory) {
-        ObjectId category = new ObjectId(filterCategory);
-        return productRepository.findByCategory(category);
+        return productRepository.findByCategory(filterCategory);
+    }
+
+    public List<Product> findBrand(String filterBrand) {
+        return productRepository.findByBrand(filterBrand);
     }
 }
