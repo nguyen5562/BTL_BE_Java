@@ -11,11 +11,15 @@ import org.springframework.stereotype.Service;
 
 import com.example.model.Category;
 import com.example.repository.CategoryRepository;
+import com.example.repository.ProductRepository;
 
 @Service
 public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     public List<Category> getAllCategory() {
         return categoryRepository.findAll();
@@ -37,6 +41,7 @@ public class CategoryService {
     }
 
     public void deleteCategory(String id) {
+        productRepository.deleteByCategory(id);
         categoryRepository.deleteById(id);
     }
 

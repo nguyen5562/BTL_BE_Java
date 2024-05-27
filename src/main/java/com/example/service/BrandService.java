@@ -11,11 +11,15 @@ import org.springframework.stereotype.Service;
 
 import com.example.model.Brand;
 import com.example.repository.BrandRepository;
+import com.example.repository.ProductRepository;
 
 @Service
 public class BrandService {
     @Autowired
     private BrandRepository brandRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     public List<Brand> getAllBrand() {
         return brandRepository.findAll();
@@ -37,6 +41,7 @@ public class BrandService {
     }
 
     public void deleteBrand(String id) {
+        productRepository.deleteByBrand(id);
         brandRepository.deleteById(id);
     }
 

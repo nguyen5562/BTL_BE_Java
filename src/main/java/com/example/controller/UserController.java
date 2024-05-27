@@ -78,8 +78,6 @@ public class UserController {
     public ResponseEntity<?> createUser(@RequestBody SignUpRequest signUpRequest) {
         try {
             if (!signUpRequest.getPassword().equals(signUpRequest.getConfirmPassword())) {
-                System.out.println(signUpRequest.getPassword());
-                System.out.println(signUpRequest.getConfirmPassword());
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of(
                         "status", "ERR",
                         "message", "Mật khẩu đã nhập không khớp"));

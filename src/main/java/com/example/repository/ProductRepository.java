@@ -22,5 +22,9 @@ public interface ProductRepository extends MongoRepository<Product, String> {
 
     @Query("{$and: [ { 'price': { $gte: ?0, $lte: ?1 } } ]}")
     Page<Product> findAllProduct(float minPrice, float maxPrice, Pageable pageable);
+
+    void deleteByCategory(String category);
+
+    void deleteByBrand(String brand);
 }
     
