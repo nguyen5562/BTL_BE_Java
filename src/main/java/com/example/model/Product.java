@@ -15,6 +15,7 @@ public class Product {
     private String description;
     private int price;
     private int stock;
+    private int sold = 0;
     private String category;
     private String brand;
     private String image;
@@ -92,5 +93,13 @@ public class Product {
 
     public void setBrand(String brand) {
         this.brand = brand;
+    }
+
+    public int getSold() {
+        return sold;
+    }
+
+    public void setSold(int sold) {
+        this.sold = sold;
     }
 }

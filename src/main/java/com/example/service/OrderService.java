@@ -10,9 +10,11 @@ import org.springframework.stereotype.Service;
 import com.example.DTO.OrderDTO;
 import com.example.model.Order;
 import com.example.model.OrderItem;
+import com.example.model.Product;
 import com.example.model.User;
 import com.example.repository.OrderItemRepository;
 import com.example.repository.OrderRepository;
+import com.example.repository.ProductRepository;
 import com.example.repository.UserRepository;
 
 @Service
@@ -22,6 +24,9 @@ public class OrderService {
 
     @Autowired
     private OrderItemRepository orderItemRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -49,6 +54,12 @@ public class OrderService {
             orderItem.setQuantity(item.getQuantity());
             orderItem.setPrice(item.getPrice());
             orderItem.setTotalPrice(item.getTotalPrice());
+
+            Product product = productRepository.findById(item.getProduct()).get();
+            product.setSold(product.getSold() + item.getQuantity());
+            product.setStock(product.getStock() - item.getQuantity());
+            productRepository.save(product);
+
             return orderItemRepository.save(orderItem);
         }).collect(Collectors.toList());
 
@@ -109,6 +120,15 @@ public class OrderService {
         }
 
         Order order = orderOptional.get();
+
+        List<OrderItem> orderItems = orderItemRepository.findByOrder(id);
+        for (OrderItem item : orderItems) {
+            Product product = productRepository.findById(item.getProduct()).get();
+            product.setStock(product.getStock() + item.getQuantity());
+            product.setSold(product.getSold() - item.getQuantity());
+            productRepository.save(product);
+        }
+
         order.setStatus(0);
         orderRepository.save(order);
     }

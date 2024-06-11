@@ -47,7 +47,7 @@ public class DemoApplication {
         };
     }
 
-     @Bean
+    @Bean
     public MultipartConfigElement multipartConfigElement() {
         MultipartConfigFactory factory = new MultipartConfigFactory();
         factory.setMaxFileSize(DataSize.ofMegabytes(50)); // Giới hạn kích thước file upload là 50MB
