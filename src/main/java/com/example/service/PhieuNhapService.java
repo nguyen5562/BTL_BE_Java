@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.example.DTO.PhieuNhapDTO;
 import com.example.model.PhieuNhap;
 import com.example.model.PhieuNhapItem;
+import com.example.model.Product;
 import com.example.model.User;
 import com.example.repository.PhieuNhapItemRepository;
 import com.example.repository.PhieuNhapRepository;
@@ -24,6 +25,9 @@ public class PhieuNhapService {
 
     @Autowired
     private PhieuNhapItemRepository phieuNhapItemRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -45,6 +49,10 @@ public class PhieuNhapService {
             phieuNhapItem.setQuantity(item.getQuantity());
             phieuNhapItem.setPrice(item.getPrice());
             phieuNhapItem.setTotalPrice(item.getTotalPrice());
+
+            Product product = productRepository.findById(item.getProduct()).get();
+            product.setStock(product.getStock() + item.getQuantity());
+            productRepository.save(product);
 
             return phieuNhapItemRepository.save(phieuNhapItem);
         }).collect(Collectors.toList());
